@@ -26,7 +26,8 @@ This section outlines the steps taken to prepare the data for analysis, ensuring
 
 ## Import & Clean Up Data
 I start by importing necessary libraries and loading the dataset, followed by initial data cleaning tasks to ensure data quality.
-``` # Importing Libraries
+```
+# Importing Libraries
 import ast
 import pandas as pd
 import seaborn as sns
@@ -39,4 +40,29 @@ df = dataset['train'].to_pandas()
 
 # Data Cleanup
 df['job_posted_date'] = pd.to_datetime(df['job_posted_date'])
-df['job_skills'] = df['job_skills'].apply(lambda x: ast.literal_eval(x) if pd.notna(x) else x) ```
+df['job_skills'] = df['job_skills'].apply(lambda x: ast.literal_eval(x) if pd.notna(x) else x)
+```
+
+## Filter US Jobs
+To focus my analysis on the U.S. job market, I apply filters to the dataset, narrowing down to roles based in the United States.
+```
+df_US = df[df['job_country'] == 'United States']
+```
+# The Analysis
+Each Jupyter notebook for this project aimed at investigating specific aspects of the data job market. Here’s how I approached each question:
+
+## 1. What are the most demanded skills for the top 3 most popular data roles?
+To find the most demanded skills for the top 3 most popular data roles. I filtered out those positions by which ones were the most popular, and got the top 5 skills for these top 3 roles. This query highlights the most popular job titles and their top skills, showing which skills I should pay attention to depending on the role I'm targeting.
+## Visualize Data
+```
+fig, ax = plt.subplots(len(job_titles), 1)
+
+
+for i, job_title in enumerate(job_titles):
+    df_plot = df_skills_perc[df_skills_perc['job_title_short'] == job_title].head(5)[::-1]
+    sns.barplot(data=df_plot, x='skill_percent', y='job_skills', ax=ax[i], hue='skill_count', palette='dark:b_r')
+
+plt.show()
+```
+![image](https://github.com/user-attachments/assets/416822cd-2642-48fa-a59e-883768a527ea)
+
